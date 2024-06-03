@@ -19,7 +19,7 @@ with app.app_context():
         "username": "admin",
         "email": "admin@example.com",
         "password": "adminpassword",
-        "role": UserRole.ADMIN,
+        "role": UserRole.ADMIN.value,
         "department": "Administration"
     }
     admin = Admin(**admin_data)
@@ -32,14 +32,14 @@ with app.app_context():
             "username": "user1",
             "email": "user1@example.com",
             "password": "user1password",
-            "role": UserRole.CLIENT,
+            "role": UserRole.CLIENT.value,
             "id_number": 1
         },
         {
             "username": "user2",
             "email": "user2@example.com",
             "password": "user2password",
-            "role": UserRole.CLIENT,
+            "role": UserRole.CLIENT.value,
             "id_number": 2
         },
         # Add more clients here

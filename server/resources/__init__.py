@@ -17,8 +17,8 @@ def register_resources(app):
     api.add_resource(HomeResource, '/')
     api.add_resource(Register, '/register')
     api.add_resource(Login, '/login')
-    api.add_resource(AdminListResource, '/admin')
-    api.add_resource(AdminResource, '/admin/<int:id>')
+    api.add_resource(AdminListResource, '/admins')
+    api.add_resource(AdminResource, '/admins/<int:id>')
     api.add_resource(ClientListResource, '/users')
     api.add_resource(ClientResource, '/users/<int:id>')
 

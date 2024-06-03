@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
-from models import db, User, UserRole
+from models import db
+from models.user import User, UserRole
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required
 
@@ -79,38 +80,48 @@ class AdminListResource(Resource):
     @jwt_required()
     def get(self):
         admins = User.query.filter_by(role=UserRole.ADMIN).all()
-        return [{'id': admin.id, 'username': admin.username, 'email': admin.email, 'department': admin.department} for admin in admins]
+        return [{
+            'id': admin.id, 
+            'username': admin.username, 
+            'email': admin.email, 
+            'department': admin.department
+        } for admin in admins]
 
-    @jwt_required()
-    def post(self):
-        args = admin_parser.parse_args()
-        new_admin = User(
-            username=args['username'],
-            email=args['email'],
-            password=generate_password_hash(args['password']),
-            role=UserRole.ADMIN,
-            department=args['department']
-        )
-        db.session.add(new_admin)
-        db.session.commit()
-        return {'message': 'Admin created successfully'}, 201
+    # @jwt_required()
+    # def post(self):
+    #     args = admin_parser.parse_args()
+    #     new_admin = User(
+    #         username=args['username'],
+    #         email=args['email'],
+    #         password=generate_password_hash(args['password']),
+    #         role=UserRole.ADMIN,
+    #         department=args['department']
+    #     )
+    #     db.session.add(new_admin)
+    #     db.session.commit()
+    #     return {'message': 'Admin created successfully'}, 201
 
 class ClientListResource(Resource):
     @jwt_required()
     def get(self):
         clients = User.query.filter_by(role=UserRole.CLIENT).all()
-        return [{'id': client.id, 'username': client.username, 'email': client.email, 'id_number': client.id_number} for client in clients]
+        return [{
+            'id': client.id, 
+            'username': client.username, 
+            'email': client.email, 
+            'id_number': client.id_number
+            } for client in clients]
 
-    @jwt_required()
-    def post(self):
-        args = client_parser.parse_args()
-        new_client = User(
-            username=args['username'],
-            email=args['email'],
-            password=generate_password_hash(args['password']),
-            role=UserRole.CLIENT,
-            id_number=args['id_number']
-        )
-        db.session.add(new_client)
-        db.session.commit()
-        return {'message': 'Client created successfully'}, 201
+    # @jwt_required()
+    # def post(self):
+    #     args = client_parser.parse_args()
+    #     new_client = User(
+    #         username=args['username'],
+    #         email=args['email'],
+    #         password=generate_password_hash(args['password']),
+    #         role=UserRole.CLIENT,
+    #         id_number=args['id_number']
+    #     )
+    #     db.session.add(new_client)
+    #     db.session.commit()
+    #     return {'message': 'Client created successfully'}, 201

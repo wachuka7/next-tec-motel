@@ -2,20 +2,38 @@ from flask_restful import Resource
 from flask import request
 from flask_jwt_extended import create_access_token
 
-from app import db
-from models.user import User
+from models import db
+from models.user import User, Admin, Client, UserRole
 
 class Register(Resource):
     def post(self):
         data=request.get_json()
-        if User.query.filter_by(email=data['email']).first():
-            return{'message': 'User already exists'}, 400
-        
-        new_user=User(
-            username=data['username'],
-            email=data['email']
-        )
-        new_user.set_password(data['password'])
+        email = data.get('email')
+        if not email:
+            return {'message': 'Email is required'}, 400
+
+        if User.query.filter_by(email=email).first():
+            return {'message': 'User already exists'}, 400
+
+        role = data.get('role')
+        if role == 'CLIENT':
+            new_user=Client(
+                username=data['username'],
+                email=data['email'],
+                password=data['password'],
+                id_number=data.get('id_number', ''),
+                role=UserRole.CLIENT
+            )
+        elif role == 'ADMIN':
+            new_user = Admin(
+                username=data['username'],
+                email=data['email'],
+                password=data['password'],
+                department=data['department'],
+                role= UserRole.ADMIN
+            )
+        else:
+            return {'message': 'Invalid role specified'}, 400
 
         db.session.add(new_user)
         db.session.commit()
@@ -25,11 +43,11 @@ class Register(Resource):
 class Login(Resource):
     def post(self):
         data=request.get_json()
-        user=user.query.filter_by(email=data['email']).first()
+        user=User.query.filter_by(email=data['email']).first()
 
         if user and user.check_password(data['password']):
             access_token=create_access_token(identity=user.id)
             return {'access_token': access_token}, 200
         else:
-            return {'message': 'Inavalid credentials'}, 401
+            return {'message': 'Invalid credentials'}, 401
 
