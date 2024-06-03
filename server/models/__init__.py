@@ -14,11 +14,11 @@ db= SQLAlchemy(metadata=metadata)
 
 class UserRole(Enum):
     ADMIN = 'admin'
-    CUSTOMER = 'customer'
+    CLIENT = 'client'
 
 from .user import User
 from .room import Room
 from .booking import Booking
 from .review import Review
-from .room_reservation import RoomReservation
+# from .room_reservation import RoomReservation
 

@@ -10,7 +10,7 @@ class Booking(db.Model):
     check_out_date = db.Column(db.Date, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
 
-    rooms= db.relationship('Room', secondary='room_reservation', backref='bookings')
+    # rooms= db.relationship('Room', back_populates='bookings')
 
 @validates('check_in_date', 'check_out_date')
 def validate_dates(self, key, date):
