@@ -7,24 +7,27 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
 from config import Config
+from models import db
 from models.user import User
 
 
 load_dotenv()
 
-app= Flask(__name__)
-CORS(app)
-db= SQLAlchemy()
 migrate= Migrate()
 jwt=JWTManager()
 
-def create_app(app):
-    
+def create_app():
+
+    app= Flask(__name__)
     app.config.from_object(Config)
+    CORS(app)    
 
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    from resources import register_resources
+    register_resources(app)
 
     return app
 
@@ -40,3 +43,9 @@ def custom_unauthorized_response(_err):
 @jwt.invalid_token_loader
 def custom_invalid_token_response(_err):
     return {"message": "Invalid token"}, 422
+
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True, port=5000)
